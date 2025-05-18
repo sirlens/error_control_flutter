@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      // Removemos el AppBar para la página inicial
       body: Consumer<AuthProvider>(
         builder: (context, auth, _) => Padding(
           padding: const EdgeInsets.all(16.0),

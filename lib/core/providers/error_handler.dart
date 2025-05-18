@@ -1,12 +1,12 @@
-import 'package:flutter/scheduler.dart';
+//import 'package:flutter/scheduler.dart';
 import '../exceptions/app_exceptions.dart';
 import '../error_handling/error_handler_interface.dart';
 
 class ErrorHandler extends IErrorHandler {
   AppException? _lastError;
   final List<AppException> _errorHistory = [];
-  final List<AppException> _errorQueue = [];
-  bool _isProcessingErrors = false;
+/*   final List<AppException> _errorQueue = [];
+  bool _isProcessingErrors = false; */
 
   @override
   AppException? get lastError => _lastError;
@@ -18,32 +18,38 @@ class ErrorHandler extends IErrorHandler {
 
   @override
   void handleError(AppException error) {
-    _errorQueue.add(error);
-    if (!_isProcessingErrors) {
-      _processErrorQueue();
-    }
+    // Manejo sincrónico del error
+    _lastError = error;
+    _errorHistory.add(error);
+    notifyListeners();
   }
 
-  void _processErrorQueue() {
+/*   void _processErrorQueue() {
     if (_errorQueue.isEmpty) {
       _isProcessingErrors = false;
       return;
     }
 
     _isProcessingErrors = true;
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    // Procesar el siguiente error inmediatamente
+    if (_errorQueue.isNotEmpty) {
+      _lastError = _errorQueue.removeAt(0);
+      _errorHistory.add(_lastError!);
+      notifyListeners();
+      // Continuar procesando la cola si hay más errores
       if (_errorQueue.isNotEmpty) {
-        _lastError = _errorQueue.removeAt(0);
-        _errorHistory.add(_lastError!);
-        notifyListeners();
+        Future.microtask(_processErrorQueue);
+      } else {
+        _isProcessingErrors = false;
       }
-      _processErrorQueue();
-    });
-  }
+    }
+  } */
 
   @override
   void clearError() {
-    _lastError = null;
-    notifyListeners();
+    if (_lastError != null) {
+      _lastError = null;
+      notifyListeners();
+    }
   }
 }

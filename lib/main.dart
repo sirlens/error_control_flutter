@@ -38,11 +38,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      initialRoute: AppRouter.login,
+      home: const ErrorDisplay(child: LoginPage()),
       onGenerateRoute: AppRouter.generateRoute,
-      builder: (context, child) {
-        return ErrorDisplay(child: child ?? const LoginPage());
-      },
+      builder: (context, child) => ErrorDisplay(
+        child: child ?? const Scaffold(),
+      ),
     );
   }
 }

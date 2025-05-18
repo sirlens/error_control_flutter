@@ -15,10 +15,14 @@ class ErrorDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<IErrorHandler>(
       builder: (context, errorHandler, _) {
-        if (errorHandler.hasError && errorHandler.lastError != null) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _showErrorMessage(context, errorHandler.lastError!);
-            errorHandler.clearError();
+        final currentError = errorHandler.lastError;
+        if (errorHandler.hasError && currentError != null) {
+          // Usar microtask para asegurar que el error se muestre después de que el widget se construya
+          Future.microtask(() {
+            if (context.mounted) {
+              _showErrorMessage(context, currentError);
+              errorHandler.clearError();
+            }
           });
         }
         return child;
@@ -27,6 +31,9 @@ class ErrorDisplay extends StatelessWidget {
   }
 
   void _showErrorMessage(BuildContext context, AppException error) {
+    // Limpiar cualquier SnackBar anterior
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Column(
@@ -47,7 +54,9 @@ class ErrorDisplay extends StatelessWidget {
           label: 'Dismiss',
           textColor: Colors.white,
           onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            }
           },
         ),
       ),
