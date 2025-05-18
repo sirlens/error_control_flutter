@@ -3,13 +3,13 @@ import '../exceptions/app_exceptions.dart';
 
 class AuthService {
   bool _hasNetwork() {
-    // Simular error de red (80% de probabilidad)
-    return Random().nextDouble() > 0.8;
+    // Simular error de red (40% de probabilidad)
+    return Random().nextDouble() > 0.4;
   }
 
   bool _isServerAvailable() {
-    // Simular error de servidor (70% de probabilidad)
-    return Random().nextDouble() > 0.7;
+    // Simular error de servidor (30% de probabilidad)
+    return Random().nextDouble() > 0.3;
   }
 
   Future<bool> login(String email, String password) async {

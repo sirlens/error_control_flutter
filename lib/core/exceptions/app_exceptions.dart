@@ -1,39 +1,56 @@
 abstract class AppException implements Exception {
   final String message;
-  final String code;
+  final String? code;
+  final ErrorSeverity severity;
 
-  const AppException({
+  AppException({
     required this.message,
-    required this.code,
+    this.code,
+    this.severity = ErrorSeverity.medium,
   });
 }
 
-class GenericError extends AppException {
-  GenericError({
-    required String message,
-    String code = 'GEN_001',
-  }) : super(message: message, code: code);
-}
-
 class AuthException extends AppException {
-  AuthException({
-    required String message,
-    String code = 'AUTH_001',
-  }) : super(message: message, code: code);
+  AuthException({required super.message})
+      : super(
+          code: 'AUTH_001',
+          severity: ErrorSeverity.high,
+        );
 }
 
 class NetworkException extends AppException {
-  NetworkException({String code = 'NET_001'})
+  NetworkException()
       : super(
-          message: 'Network connection error',
-          code: code,
+          message: 'No internet connection',
+          code: 'NET_001',
+          severity: ErrorSeverity.high,
         );
 }
 
 class ServerException extends AppException {
-  ServerException({String code = 'SRV_001'})
+  ServerException()
       : super(
-          message: 'Server error',
-          code: code,
+          message: 'Server error, try again later',
+          code: 'SRV_001',
+          severity: ErrorSeverity.high,
         );
 }
+
+class GenericException extends AppException {
+  GenericException({required super.message})
+      : super(
+          code: 'GEN_001',
+          severity: ErrorSeverity.medium,
+        );
+}
+
+class NavigationException extends AppException {
+  NavigationException({required String route})
+      : super(
+          message: 'Route $route not found',
+          code: 'NAV_404',
+          severity: ErrorSeverity.high,
+        );
+}
+
+enum ErrorSeverity { low, medium, high }

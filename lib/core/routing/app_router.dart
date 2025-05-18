@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../error_handling/error_handler_interface.dart';
+import '../exceptions/app_exceptions.dart';
+import '../di/service_locator.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
-import '../error_handling/app_error_handler.dart';
 
 class AppRouter {
   static const String login = '/login';
@@ -15,13 +17,20 @@ class AppRouter {
         case dashboard:
           return MaterialPageRoute(builder: (_) => const DashboardPage());
         default:
-          throw NavigationError(route: settings.name ?? 'unknown');
+          throw NavigationException(
+            route: settings.name ?? 'unknown'
+          );
       }
     } catch (e) {
       return MaterialPageRoute(
         builder: (context) {
-          AppErrorHandler.handleError(context, e);
-          // Fallback a una ruta segura
+          if (e is AppException) {
+            getIt<IErrorHandler>().handleError(e);
+          } else {
+            getIt<IErrorHandler>().handleError(
+              GenericException(message: e.toString()),
+            );
+          }
           return const LoginPage();
         },
       );

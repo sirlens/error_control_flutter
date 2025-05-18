@@ -104,8 +104,8 @@ lib/
 ## Testing Error Handling
 
 The project includes simulated error scenarios:
-- Network errors (80% probability)
-- Server errors (70% probability)
+- Network errors (40% probability)
+- Server errors (30% probability)
 - Authentication errors
 - Navigation errors
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import '../services/auth_service.dart';
 import '../error_handling/error_handler_interface.dart';
+import '../exceptions/app_exceptions.dart';
+import '../services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final IErrorHandler _errorHandler;
@@ -11,23 +11,25 @@ class AuthProvider extends ChangeNotifier {
 
   AuthProvider(this._errorHandler, this._authService);
 
-  Future<bool> login(
-      BuildContext context, String email, String password) async {
+  Future<bool> login(String email, String password) async {
     isLoading = true;
     notifyListeners();
 
     try {
       final success = await _authService.login(email, password);
       isAuthenticated = success;
-      isLoading = false;
-      notifyListeners();
       return success;
-    } catch (e) {
-      isLoading = false;
-      isAuthenticated = false;
-      notifyListeners();
+    } on AppException catch (e) {
       _errorHandler.handleError(e);
       return false;
+    } catch (e) {
+      _errorHandler.handleError(
+        GenericException(message: e.toString()),
+      );
+      return false;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -41,10 +43,16 @@ class AuthProvider extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
       return success;
-    } catch (e) {
-      isLoading = false;
-      notifyListeners();
+    } on AppException catch (e) {
       _errorHandler.handleError(e);
+      return false;
+
+    }
+    catch (e) {
+      isLoading = false;
+      _errorHandler.handleError(
+        GenericException(message: e.toString()),
+      );
       return false;
     }
   }

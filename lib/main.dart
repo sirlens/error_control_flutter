@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simulate_struct_app/features/auth/presentation/pages/login_page.dart';
+
 import 'core/di/service_locator.dart';
 import 'core/error_handling/error_handler_interface.dart';
-import 'core/services/auth_service.dart';
 import 'core/providers/auth_provider.dart';
 import 'core/routing/app_router.dart';
-import 'core/widgets/error_display.dart';
+import 'core/services/auth_service.dart';
+import 'features/utils/error_display.dart'; // Actualizar import
 
 void main() {
   setupServiceLocator();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => AuthProvider(
-            getIt<IErrorHandler>(),
-            getIt<AuthService>(),
-          ),
-        ),
         ChangeNotifierProvider<IErrorHandler>(
-          create: (_) => getIt<IErrorHandler>(),
+          create: (_) => getIt<IErrorHandler>()
+        ),
+        ChangeNotifierProvider(
+          create:
+              (_) => AuthProvider(getIt<IErrorHandler>(), getIt<AuthService>()),
         ),
       ],
       child: const MyApp(),
@@ -41,9 +40,9 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: AppRouter.login,
       onGenerateRoute: AppRouter.generateRoute,
-      home: const ErrorDisplay(
-        child: LoginPage(),
-      ),
+      builder: (context, child) {
+        return ErrorDisplay(child: child ?? const LoginPage());
+      },
     );
   }
 }

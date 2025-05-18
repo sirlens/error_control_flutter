@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/providers/auth_provider.dart';
-import '../../../dashboard/presentation/pages/dashboard_page.dart';
 import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -59,16 +58,13 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () async {
                           if (_formKey.currentState?.validate() ?? false) {
                             final success = await auth.login(
-                              context,
                               _emailController.text,
                               _passwordController.text,
                             );
                             if (success && mounted) {
-                              Navigator.pushReplacement(
+                              Navigator.pushReplacementNamed(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (_) => const DashboardPage(),
-                                ),
+                                '/dashboard',
                               );
                             }
                           }
