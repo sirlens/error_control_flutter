@@ -34,10 +34,10 @@ This project showcases a complete error handling architecture with features like
   - Authentication Errors
 
 - **Core Components**:
-  - [`ErrorHandler`](lib/core/error_handling/error_handler.dart) - Central error handling implementation
-  - [`ErrorDisplay`](lib/core/widgets/error_display.dart) - Error display widget
-  - [`ErrorListener`](lib/core/widgets/error_listener.dart) - Error state listener
-  - [`AppErrorHandler`](lib/core/error_handling/app_error_handler.dart) - Application-wide error handling
+  - [`ErrorHandler`](lib/core/providers/error_handler.dart) - Central error handling implementation
+  - [`ErrorDisplay`](lib/features/utils/error_display.dart) - Error display widget
+  - [`IErrorHandler`](lib/core/error_handling/error_handler_interface.dart) - Error handler interface
+  - [`AppExceptions`](lib/core/exceptions/app_exceptions.dart) - Application exceptions
 
 ### Authentication Features
 
@@ -52,15 +52,30 @@ This project showcases a complete error handling architecture with features like
 lib/
 ├── core/
 │   ├── di/
+│   │   └── service_locator.dart
 │   ├── error_handling/
+│   │   └── error_handler_interface.dart
 │   ├── exceptions/
+│   │   └── app_exceptions.dart
 │   ├── providers/
+│   │   ├── auth_provider.dart
+│   │   └── error_handler.dart
 │   ├── routing/
-│   ├── services/
-│   └── widgets/
+│   │   └── app_router.dart
+│   └── services/
+│       └── auth_service.dart
 └── features/
     ├── auth/
-    └── dashboard/
+    │   └── presentation/
+    │       └── pages/
+    │           ├── login_page.dart
+    │           └── register_page.dart
+    ├── dashboard/
+    │   └── presentation/
+    │       └── pages/
+    │           └── dashboard_page.dart
+    └── utils/
+        └── error_display.dart
 ```
 
 ## Installing FVM (Flutter Version Manager)
