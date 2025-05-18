@@ -33,8 +33,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> register(
-      BuildContext context, String email, String password) async {
+  Future<bool> register( String email, String password) async {
     isLoading = true;
     notifyListeners();
 

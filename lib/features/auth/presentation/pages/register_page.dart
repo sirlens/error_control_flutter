@@ -58,7 +58,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
                         final success = await auth.register(
-                          context,
                           _emailController.text,
                           _passwordController.text,
                         );
